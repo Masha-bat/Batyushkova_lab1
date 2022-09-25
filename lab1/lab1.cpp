@@ -125,8 +125,19 @@ void editPipe(Pipe& p)
     }
 }
 
-void editCS(CS cs)
+void editCS(CS& cs)
 {
+    if (cs.workingWorkshops == -1)
+        cout << "There is no working compressor stations" << endl;
+    else
+    {
+        cout << "Number of workshops: " << cs.workshops << endl;
+        cout << "Change number of working shops: ";
+        cin >> cs.workingWorkshops;
+        cs.workingWorkshops = correctWorkingWorkshops(cs.workshops, cs.workingWorkshops);
+        cs.efficiency = double(cs.workingWorkshops) / double(cs.workshops) * 100;
+    }
+
 
 }
 
@@ -160,7 +171,7 @@ int main()
 
     while (action)
     {
-        cout << "Menu \n1. Add pipe \n2. Add CS \n3. View all objects \n4. Edit pipe \n5. Edit CS \n6. Save \n7. Download \n0. Exit \n\n";
+        cout << "\nMenu \n1. Add pipe \n2. Add CS \n3. View all objects \n4. Edit pipe \n5. Edit CS \n6. Save \n7. Download \n0. Exit \n\n";
         cin >> action;
         switch (action)
         {
