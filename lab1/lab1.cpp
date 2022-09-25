@@ -5,7 +5,7 @@ using namespace std;
 struct Pipe
 {
     double length = 0, diametr = 0;
-    bool repair = false;
+    int repair = -1;
 };
 
 struct CS
@@ -51,6 +51,28 @@ int correctWorkingWorkshops(int x, int y)
     return y;
 }
 
+int correctAttribute(int x)
+{
+    while ((x < 0) || (x > 1))
+    { 
+        cin.clear();
+        cin.ignore(1i64, '\n');
+        cout << "Error! Please, enter right attribute (0 - pipe is under repair, 1 - pipe is working) " << endl;
+        cin >> x;
+    }
+    return x;
+}
+
+string attribute(int x)
+{
+    if (x == 0)
+        return ("Pipe is under repair");
+    else if (x == 1)
+        return ("Pipe is working");
+    else
+        return ("Unknown");
+}
+
 void addPipe(Pipe& p)
 {
     cout << "Enter pipe length: ";
@@ -59,8 +81,10 @@ void addPipe(Pipe& p)
     cout << "Enter pipe diametr: ";
     cin >> p.diametr;
     p.diametr = correctCinPipe(p.diametr);
-    cout << "Select attribute: \n 0. pipe under repair \n 1. pipe is working \n";
+    cout << "Select attribute: \n 0. pipe is under repair \n 1. pipe is working \n";
     cin >> p.repair;
+    p.repair = correctAttribute(p.repair);
+    cout << attribute(p.repair) << endl;
 }
 
 void addCS(CS& cs)
@@ -81,22 +105,23 @@ void viewObjects(Pipe p, CS cs)
     cout << "\nPipe: "
         << "\nLength = " << p.length
         << "\nDiametr = " << p.diametr
-        << "\nSelected attribute: " << p.repair << endl;
+        << "\nSelected attribute: " << attribute(p.repair) << endl;
     cout << "\nCS: \nName: " << cs.name
         << "\nNumber of workshops = " << cs.workshops
         << "\nNumber of working workshops = " << cs.workingWorkshops
         << "\nEfficiency indicator = " << cs.efficiency << "%" << endl;
 }
 
-void editPipe(Pipe p)
+void editPipe(Pipe& p)
 {
-    if (p.repair == false)
+    if (p.repair == -1)
         cout << "There is no pipe" << endl;
     else
     {
-        cout << "Select new attribute: \n 0. pipe under repair \n 1. pipe is working \n" << endl;
+        cout << "Change pipe state: \n0. pipe is under repair \n1. pipe is working" << endl;
         cin >> p.repair;
-        cout << "New status set: " << p.repair << endl;
+        p.repair = correctAttribute(p.repair);
+        cout << attribute(p.repair) << endl;
     }
 }
 
@@ -122,14 +147,7 @@ void save(Pipe& p, CS& cs)
     }
 }
 
-
-
 void download()
-{
-
-}
-
-void exit()
 {
 
 }
@@ -142,7 +160,7 @@ int main()
 
     while (action)
     {
-        cout << "\nMenu \n1. Add pipe \n2. Add CS \n3. View all objects \n4. Edit pipe \n5. Edit CS \n6. Save \n7. Download \n0. Exit \n\n";
+        cout << "Menu \n1. Add pipe \n2. Add CS \n3. View all objects \n4. Edit pipe \n5. Edit CS \n6. Save \n7. Download \n0. Exit \n\n";
         cin >> action;
         switch (action)
         {
