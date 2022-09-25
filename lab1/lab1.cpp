@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 struct Pipe
@@ -141,26 +142,42 @@ void editCS(CS& cs)
 
 }
 
-void save(Pipe& p, CS& cs)
+void saveToFile(Pipe& p, CS& cs)
 {
     ofstream file;
-    file.open("savedData.txt", 'w');
+    file.open("savedData.txt");
     if (file.is_open())
     {
         file << p.length << endl
-            << p.diametr << endl
-            << p.repair << endl
-            << cs.name << endl
-            << cs.workshops << endl
-            << cs.workingWorkshops << endl
-            << cs.efficiency << "%" << endl;
+             << p.diametr << endl
+             << p.repair << endl
+             << cs.name << endl
+             << cs.workshops << endl
+             << cs.workingWorkshops << endl
+             << cs.efficiency << "%" << endl;
         file.close();
     }
 }
 
-void download()
+void downloadFromFile(Pipe& p, CS& cs)
 {
-
+    ifstream file2;
+    string line;
+    file2.open("savedData.txt", ios::out);
+    getline(file2, line);
+    p.length = stoi(line);
+    getline(file2, line);
+    p.diametr = stoi(line);
+    getline(file2, line);
+    p.repair = stoi(line);
+    getline(file2, line);
+    cs.name = line;
+    getline(file2, line);
+    cs.workshops = stoi(line);
+    getline(file2, line);
+    cs.workingWorkshops = stoi(line);
+    getline(file2, line);
+    cs.efficiency = stod(line);
 }
 
 int main()
@@ -202,12 +219,12 @@ int main()
         }
         case 6:
         {
-            save(p, cs);
+            saveToFile(p, cs);
             break;
         }
         case 7:
         {
-            download();
+            downloadFromFile(p, cs);
             break;
         }
         case 0:
