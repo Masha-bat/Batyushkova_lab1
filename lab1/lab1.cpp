@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <fstream>
 using namespace std;
 
 struct Pipe
@@ -14,51 +15,114 @@ struct CS
     double efficiency = 0;
 };
 
-void addPipe()
+double correctCinPipe(double x)
 {
-    Pipe p;
+    while (x <= 0)
+    {
+        cin.clear();
+        cin.ignore(1i64, '\n');
+        cout << "Error! Please, enter value > 0" << endl;
+        cin >> x;
+    }
+    return x;
+}
+
+int correctCinCs(int x)
+{
+    while (x <= 0)
+    {
+        cin.clear();
+        cin.ignore(1i64, '\n');
+        cout << "Error! Please, enter integer value > 0" << endl;
+        cin >> x;
+    }
+    return x;
+}
+
+int correctWorkingWorkshops(int x, int y)
+{
+    while ((x < y) || (x <= 0) || (y <= 0))
+    {
+        cin.clear();
+        cin.ignore(1i64, '\n');
+        cout << "Error! Please, enter integer value > 0 and no more then the number of workshops" << endl;
+        cin >> y;
+    }
+    return y;
+}
+
+void addPipe(Pipe& p)
+{
     cout << "Enter pipe length: ";
     cin >> p.length;
+    p.length = correctCinPipe(p.length);
     cout << "Enter pipe diametr: ";
     cin >> p.diametr;
+    p.diametr = correctCinPipe(p.diametr);
     cout << "Select attribute: \n 0. pipe under repair \n 1. pipe is working \n";
     cin >> p.repair;
 }
 
-void addCS()
+void addCS(CS& cs)
 {
-    CS cs;
     cout << "Give the name of the compressor station: ";
     cin >> cs.name;
     cout << "Number of workshops: ";
     cin >> cs.workshops;
+    cs.workshops = correctCinCs(cs.workshops);
     cout << "Number of working workshops: ";
     cin >> cs.workingWorkshops;
+    cs.workingWorkshops = correctWorkingWorkshops(cs.workshops, cs.workingWorkshops);
     cs.efficiency = double(cs.workingWorkshops) / double(cs.workshops) * 100;
 }
 
-void viewObjects()
+void viewObjects(Pipe p, CS cs)
 {
-    Pipe p;
-    CS cs;
-    cout << "\nPipe: \nLength = " << p.length << "\nDiametr = " << p.diametr << "\nSelected attribute: " << p.repair << endl;
-    cout << "\nCS: \nName: " << cs.name << "\nNumber of workshops = " << cs.workshops << "\nNumber of working workshops = " << cs.workingWorkshops << "\nEfficiency indicator = " << cs.efficiency << endl;
+    cout << "\nPipe: "
+        << "\nLength = " << p.length
+        << "\nDiametr = " << p.diametr
+        << "\nSelected attribute: " << p.repair << endl;
+    cout << "\nCS: \nName: " << cs.name
+        << "\nNumber of workshops = " << cs.workshops
+        << "\nNumber of working workshops = " << cs.workingWorkshops
+        << "\nEfficiency indicator = " << cs.efficiency << "%" << endl;
 }
 
-void editPipe()
+void editPipe(Pipe p)
+{
+    if (p.repair == false)
+        cout << "There is no pipe" << endl;
+    else
+    {
+        cout << "Select new attribute: \n 0. pipe under repair \n 1. pipe is working \n" << endl;
+        cin >> p.repair;
+        cout << "New status set: " << p.repair << endl;
+    }
+}
+
+void editCS(CS cs)
 {
 
 }
 
-void editCS()
+void save(Pipe& p, CS& cs)
 {
-
+    ofstream file;
+    file.open("savedData.txt", 'w');
+    if (file.is_open())
+    {
+        file << p.length << endl
+            << p.diametr << endl
+            << p.repair << endl
+            << cs.name << endl
+            << cs.workshops << endl
+            << cs.workingWorkshops << endl
+            << cs.efficiency << "%" << endl;
+        file.close();
+    }
 }
 
-void save()
-{
 
-}
 
 void download()
 {
@@ -84,32 +148,32 @@ int main()
         {
         case 1:
         {
-            addPipe();
+            addPipe(p);
             break;
         }
         case 2:
         {
-            addCS();
+            addCS(cs);
             break;
         }
         case 3:
         {
-            viewObjects();
+            viewObjects(p, cs);
             break;
         }
         case 4:
         {
-            editPipe();
+            editPipe(p);
             break;
         }
         case 5:
         {
-            editCS();
+            editCS(cs);
             break;
         }
         case 6:
         {
-            save();
+            save(p, cs);
             break;
         }
         case 7:
@@ -119,10 +183,12 @@ int main()
         }
         case 0:
         {
-            exit();
-            break;
+            return 0;
         }
-
+        default:
+        {
+            cout << "Wrong action. Please, enter action from menu (0-7)" << endl;
+        }
         }
     }
 
