@@ -1,24 +1,23 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <typeinfo>
 using namespace std;
 
 struct Pipe
 {
-    double length = 0, diametr = 0;
-    int repair = -1;
+    double length = 0, diametr = 0, repair = -1;
 };
 
 struct CS
 {
     string name = "";
-    int workshops = 0, workingWorkshops = -1;
-    double efficiency = 0;
+    double efficiency = 0, workshops = 0, workingWorkshops = -1;
 };
 
 double correctCinPipe(double x)
 {
-    while (x <= 0)
+    while ((x <= 0))
     {
         cin.clear();
         cin.ignore(1i64, '\n');
@@ -28,9 +27,9 @@ double correctCinPipe(double x)
     return x;
 }
 
-int correctCinCs(int x)
+int correctCinCs(double x)
 {
-    while (x <= 0)
+    while ((x <= 0) || (x / trunc(x) != 1))
     {
         cin.clear();
         cin.ignore(1i64, '\n');
@@ -40,9 +39,9 @@ int correctCinCs(int x)
     return x;
 }
 
-int correctWorkingWorkshops(int x, int y)
+int correctWorkingWorkshops(double x, double y)
 {
-    while ((x < y) || (x <= 0) || (y <= 0))
+    while ((x < y) || (x <= 0) || (y <= 0) || (x / trunc(x) != 1) || (y / trunc(y) != 1))
     {
         cin.clear();
         cin.ignore(1i64, '\n');
@@ -52,9 +51,9 @@ int correctWorkingWorkshops(int x, int y)
     return y;
 }
 
-int correctAttribute(int x)
+double correctAttribute(double x)
 {
-    while ((x < 0) || (x > 1))
+    while ((x < 0) || (x > 1) || (x / trunc(x) != 1))
     { 
         cin.clear();
         cin.ignore(1i64, '\n');
