@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-#include <typeinfo>
 using namespace std;
 
 struct Pipe
@@ -15,12 +14,13 @@ struct CS
     double efficiency = 0, workshops = 0, workingWorkshops = -1;
 };
 
+
 double correctCinPipe(double x)
 {
-    while ((x <= 0))
+    while (x <= 0)
     {
         cin.clear();
-        cin.ignore(1i64, '\n');
+        cin.ignore(INT_MAX, '\n');
         cout << "Error! Please, enter value > 0" << endl;
         cin >> x;
     }
@@ -32,7 +32,7 @@ int correctCinCs(double x)
     while ((x <= 0) || (x / trunc(x) != 1))
     {
         cin.clear();
-        cin.ignore(1i64, '\n');
+        cin.ignore(INT_MAX, '\n');
         cout << "Error! Please, enter integer value > 0" << endl;
         cin >> x;
     }
@@ -41,10 +41,10 @@ int correctCinCs(double x)
 
 int correctWorkingWorkshops(double x, double y)
 {
-    while ((x < y) || (x <= 0) || (y <= 0) || (x / trunc(x) != 1) || (y / trunc(y) != 1))
+    while ((x < y) || (x, y <= 0) || (x / trunc(x) != 1) || (y / trunc(y) != 1))
     {
         cin.clear();
-        cin.ignore(1i64, '\n');
+        cin.ignore(INT_MAX, '\n');
         cout << "Error! Please, enter integer value > 0 and no more then the number of workshops" << endl;
         cin >> y;
     }
@@ -53,21 +53,21 @@ int correctWorkingWorkshops(double x, double y)
 
 double correctAttribute(double x)
 {
-    while ((x < 0) || (x > 1) || (x / trunc(x) != 1))
+    while ((x < 1) || (x > 2) || (x / trunc(x) != 1))
     { 
         cin.clear();
-        cin.ignore(1i64, '\n');
-        cout << "Error! Please, enter right attribute (0 - pipe is under repair, 1 - pipe is working) " << endl;
+        cin.ignore(INT_MAX, '\n');
+        cout << "Error! Please, enter right attribute (1 - pipe is under repair, 2 - pipe is working) " << endl;
         cin >> x;
     }
     return x;
 }
 
-string attribute(int x)
+string attribute(double x)
 {
-    if (x == 0)
+    if (x == 1)
         return ("Pipe is under repair");
-    else if (x == 1)
+    else if (x == 2)
         return ("Pipe is working");
     else
         return ("Unknown");
@@ -81,7 +81,7 @@ void addPipe(Pipe& p)
     cout << "Enter pipe diametr: ";
     cin >> p.diametr;
     p.diametr = correctCinPipe(p.diametr);
-    cout << "Select attribute: \n 0. pipe is under repair \n 1. pipe is working \n";
+    cout << "Select attribute: \n1. pipe is under repair \n2. pipe is working \n";
     cin >> p.repair;
     p.repair = correctAttribute(p.repair);
     cout << attribute(p.repair) << endl;
@@ -90,7 +90,8 @@ void addPipe(Pipe& p)
 void addCS(CS& cs)
 {
     cout << "Give the name of the compressor station: ";
-    cin >> cs.name;
+    cin.ignore();
+    getline(cin, cs.name);
     cout << "Number of workshops: ";
     cin >> cs.workshops;
     cs.workshops = correctCinCs(cs.workshops);
@@ -102,14 +103,20 @@ void addCS(CS& cs)
 
 void viewObjects(Pipe p, CS cs)
 {
-    cout << "\nPipe: "
-        << "\nLength = " << p.length
-        << "\nDiametr = " << p.diametr
-        << "\nSelected attribute: " << attribute(p.repair) << endl;
-    cout << "\nCS: \nName: " << cs.name
-        << "\nNumber of workshops = " << cs.workshops
-        << "\nNumber of working workshops = " << cs.workingWorkshops
-        << "\nEfficiency indicator = " << cs.efficiency << "%" << endl;
+    if ((p.length != 0) || (p.diametr != 0) || (cs.workshops != 0))
+    {
+        cout << "\nPipe: "
+            << "\nLength = " << p.length
+            << "\nDiametr = " << p.diametr
+            << "\nSelected attribute: " << attribute(p.repair) << endl;
+        cout << "\nCS: \nName: " << cs.name
+            << "\nNumber of workshops = " << cs.workshops
+            << "\nNumber of working workshops = " << cs.workingWorkshops
+            << "\nEfficiency indicator = " << cs.efficiency << "%" << endl;
+    }
+    else
+        cout << "Error! Please, add options for pipe or CS" << endl;
+    
 }
 
 void editPipe(Pipe& p)
