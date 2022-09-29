@@ -15,7 +15,7 @@ struct CS
 };
 
 
-double correctCinPipe(double x)
+double correctCinPipeCS(double x)
 {
     while (x <= 0)
     {
@@ -77,10 +77,10 @@ void addPipe(Pipe& p)
 {
     cout << "Enter pipe length: ";
     cin >> p.length;
-    p.length = correctCinPipe(p.length);
+    p.length = correctCinPipeCS(p.length);
     cout << "Enter pipe diametr: ";
     cin >> p.diametr;
-    p.diametr = correctCinPipe(p.diametr);
+    p.diametr = correctCinPipeCS(p.diametr);
     cout << "Select attribute: \n1. pipe is under repair \n2. pipe is working \n";
     cin >> p.repair;
     p.repair = correctAttribute(p.repair);
@@ -97,13 +97,14 @@ void addCS(CS& cs)
     cs.workshops = correctCinCs(cs.workshops);
     cout << "Number of working workshops: ";
     cin >> cs.workingWorkshops;
-    cs.workingWorkshops = correctWorkingWorkshops(cs.workshops, cs.workingWorkshops);
-    cs.efficiency = double(cs.workingWorkshops) / double(cs.workshops) * 100;
+    cout << "Efficiency indicator = ";
+    cin >> cs.efficiency;
+    cs.efficiency = correctCinPipeCS(cs.efficiency);
 }
 
 void viewObjects(Pipe p, CS cs)
 {
-    if ((p.length != 0) || (p.diametr != 0) || (cs.workshops != 0))
+    if (p.length != 0)
     {
         cout << "\nPipe: "
             << "\nLength = " << p.length
