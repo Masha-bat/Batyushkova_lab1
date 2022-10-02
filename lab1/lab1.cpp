@@ -90,8 +90,8 @@ void addPipe(Pipe& p)
 void addCS(CS& cs)
 {
     cout << "Give the name of the compressor station: ";
-    cin.ignore();
-    getline(cin, cs.name);
+    //cin.ignore();
+    getline(cin >> ws, cs.name);
     cout << "Number of workshops: ";
     cin >> cs.workshops;
     cs.workshops = correctCinCs(cs.workshops);
@@ -113,7 +113,7 @@ void viewObjects(Pipe p, CS cs)
         cout << "\nCS: \nName: " << cs.name
             << "\nNumber of workshops = " << cs.workshops
             << "\nNumber of working workshops = " << cs.workingWorkshops
-            << "\nEfficiency indicator = " << cs.efficiency << "%" << endl;
+            << "\nEfficiency indicator = " << cs.efficiency << endl;
     }
     else
         cout << "Error! Please, add options for pipe or CS" << endl;
@@ -170,21 +170,15 @@ void downloadFromFile(Pipe& p, CS& cs)
 {
     ifstream file2;
     string line;
-    file2.open("savedData.txt", ios::out);
-    getline(file2, line);
-    p.length = stoi(line);
-    getline(file2, line);
-    p.diametr = stoi(line);
-    getline(file2, line);
-    p.repair = stoi(line);
-    getline(file2, line);
+    file2.open("savedData.txt");
+    file2 >> p.length;
+    file2 >> p.diametr;
+    file2 >> p.repair;
+    getline(file2 >> ws, line);
     cs.name = line;
-    getline(file2, line);
-    cs.workshops = stoi(line);
-    getline(file2, line);
-    cs.workingWorkshops = stoi(line);
-    getline(file2, line);
-    cs.efficiency = stod(line);
+    file2 >> cs.workshops;
+    file2 >> cs.workingWorkshops;
+    file2 >> cs.efficiency;
 }
 
 int main()
