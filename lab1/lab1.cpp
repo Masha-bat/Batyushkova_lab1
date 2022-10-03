@@ -90,7 +90,6 @@ void addPipe(Pipe& p)
 void addCS(CS& cs)
 {
     cout << "Give the name of the compressor station: ";
-    //cin.ignore();
     getline(cin >> ws, cs.name);
     cout << "Number of workshops: ";
     cin >> cs.workshops;
@@ -191,6 +190,7 @@ int main()
     {
         cout << "\nMenu \n1. Add pipe \n2. Add CS \n3. View all objects \n4. Edit pipe \n5. Edit CS \n6. Save \n7. Download \n0. Exit \n\n";
         cin >> action;
+        correctCinPipeCS(action);
         switch (action)
         {
         case 1:
