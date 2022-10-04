@@ -11,11 +11,10 @@ struct Pipe
 struct CS
 {
     string name = "";
-    double efficiency = 0, workshops = 0, workingWorkshops = -1;
+    int efficiency = 0, workshops = 0, workingWorkshops = -1;
 };
 
-
-double correctCinPipeCS(double x)
+double varificationOfEnteredData(double x)
 {
     while (x <= 0)
     {
@@ -27,7 +26,7 @@ double correctCinPipeCS(double x)
     return x;
 }
 
-int correctCinCs(double x)
+int integerCheck(double x)
 {
     while ((x <= 0) || (x / trunc(x) != 1))
     {
@@ -39,9 +38,9 @@ int correctCinCs(double x)
     return x;
 }
 
-int correctWorkingWorkshops(double x, double y)
+int correctWorkingWorkshops(int x, double y)
 {
-    while ((x < y) || (x, y <= 0) || (x / trunc(x) != 1) || (y / trunc(y) != 1))
+    while ((x < y) || (y <= 0) || (y / trunc(y) != 1))
     {
         cin.clear();
         cin.ignore(INT_MAX, '\n');
@@ -51,7 +50,7 @@ int correctWorkingWorkshops(double x, double y)
     return y;
 }
 
-double correctAttribute(double x)
+int correctAttribute(double x)
 {
     while ((x < 1) || (x > 2) || (x / trunc(x) != 1))
     { 
@@ -63,7 +62,7 @@ double correctAttribute(double x)
     return x;
 }
 
-string attribute(double x)
+string pipeStatus(int x)
 {
     if (x == 1)
         return ("Pipe is under repair");
@@ -77,14 +76,14 @@ void addPipe(Pipe& p)
 {
     cout << "Enter pipe length: ";
     cin >> p.length;
-    p.length = correctCinPipeCS(p.length);
+    p.length = varificationOfEnteredData(p.length);
     cout << "Enter pipe diametr: ";
     cin >> p.diametr;
-    p.diametr = correctCinPipeCS(p.diametr);
+    p.diametr = varificationOfEnteredData(p.diametr);
     cout << "Select attribute: \n1. pipe is under repair \n2. pipe is working \n";
     cin >> p.repair;
     p.repair = correctAttribute(p.repair);
-    cout << attribute(p.repair) << endl;
+    cout << pipeStatus(p.repair) << endl;
 }
 
 void addCS(CS& cs)
@@ -93,12 +92,12 @@ void addCS(CS& cs)
     getline(cin >> ws, cs.name);
     cout << "Number of workshops: ";
     cin >> cs.workshops;
-    cs.workshops = correctCinCs(cs.workshops);
+    cs.workshops = integerCheck(cs.workshops);
     cout << "Number of working workshops: ";
     cin >> cs.workingWorkshops;
     cout << "Efficiency indicator = ";
     cin >> cs.efficiency;
-    cs.efficiency = correctCinPipeCS(cs.efficiency);
+    cs.efficiency = varificationOfEnteredData(cs.efficiency);
 }
 
 void viewObjects(Pipe p, CS cs)
@@ -108,7 +107,7 @@ void viewObjects(Pipe p, CS cs)
         cout << "\nPipe: "
             << "\nLength = " << p.length
             << "\nDiametr = " << p.diametr
-            << "\nSelected attribute: " << attribute(p.repair) << endl;
+            << "\nSelected attribute: " << pipeStatus(p.repair) << endl;
         cout << "\nCS: \nName: " << cs.name
             << "\nNumber of workshops = " << cs.workshops
             << "\nNumber of working workshops = " << cs.workingWorkshops
@@ -128,7 +127,7 @@ void editPipe(Pipe& p)
         cout << "Change pipe state: \n0. pipe is under repair \n1. pipe is working" << endl;
         cin >> p.repair;
         p.repair = correctAttribute(p.repair);
-        cout << attribute(p.repair) << endl;
+        cout << pipeStatus(p.repair) << endl;
     }
 }
 
@@ -142,7 +141,6 @@ void editCS(CS& cs)
         cout << "Change number of working shops: ";
         cin >> cs.workingWorkshops;
         cs.workingWorkshops = correctWorkingWorkshops(cs.workshops, cs.workingWorkshops);
-        cs.efficiency = double(cs.workingWorkshops) / double(cs.workshops) * 100;
     }
 
 
@@ -160,7 +158,7 @@ void saveToFile(Pipe& p, CS& cs)
              << cs.name << endl
              << cs.workshops << endl
              << cs.workingWorkshops << endl
-             << cs.efficiency << "%" << endl;
+             << cs.efficiency << endl;
         file.close();
     }
 }
@@ -170,14 +168,21 @@ void downloadFromFile(Pipe& p, CS& cs)
     ifstream file2;
     string line;
     file2.open("savedData.txt");
-    file2 >> p.length;
-    file2 >> p.diametr;
-    file2 >> p.repair;
-    getline(file2 >> ws, line);
-    cs.name = line;
-    file2 >> cs.workshops;
-    file2 >> cs.workingWorkshops;
-    file2 >> cs.efficiency;
+    if (file2.is_open())
+    {
+        file2 >> p.length;
+        file2 >> p.diametr;
+        file2 >> p.repair;
+        getline(file2 >> ws, line);
+        cs.name = line;
+        file2 >> cs.workshops;
+        file2 >> cs.workingWorkshops;
+        file2 >> cs.efficiency;
+    }
+    else
+    {
+        cout << "There is no file" << endl;
+    }
 }
 
 int main()
@@ -190,7 +195,7 @@ int main()
     {
         cout << "\nMenu \n1. Add pipe \n2. Add CS \n3. View all objects \n4. Edit pipe \n5. Edit CS \n6. Save \n7. Download \n0. Exit \n\n";
         cin >> action;
-        correctCinPipeCS(action);
+        varificationOfEnteredData(action);
         switch (action)
         {
         case 1:
