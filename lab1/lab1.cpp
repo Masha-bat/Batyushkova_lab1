@@ -14,7 +14,7 @@ struct CS
     int efficiency = 0, workshops = 0, workingWorkshops = -1;
 };
 
-double varificationOfEnteredData(double x)
+double verificationOfEnteredData(double x)
 {
     while (x <= 0)
     {
@@ -76,10 +76,10 @@ void addPipe(Pipe& p)
 {
     cout << "Enter pipe length: ";
     cin >> p.length;
-    p.length = varificationOfEnteredData(p.length);
+    p.length = verificationOfEnteredData(p.length);
     cout << "Enter pipe diametr: ";
     cin >> p.diametr;
-    p.diametr = varificationOfEnteredData(p.diametr);
+    p.diametr = verificationOfEnteredData(p.diametr);
     cout << "Select attribute: \n1. pipe is under repair \n2. pipe is working \n";
     cin >> p.repair;
     p.repair = correctAttribute(p.repair);
@@ -97,7 +97,7 @@ void addCS(CS& cs)
     cin >> cs.workingWorkshops;
     cout << "Efficiency indicator = ";
     cin >> cs.efficiency;
-    cs.efficiency = varificationOfEnteredData(cs.efficiency);
+    cs.efficiency = verificationOfEnteredData(cs.efficiency);
 }
 
 void viewObjects(Pipe p, CS cs)
@@ -108,14 +108,18 @@ void viewObjects(Pipe p, CS cs)
             << "\nLength = " << p.length
             << "\nDiametr = " << p.diametr
             << "\nSelected attribute: " << pipeStatus(p.repair) << endl;
+    }
+    if (cs.workshops != 0)
+    {
         cout << "\nCS: \nName: " << cs.name
             << "\nNumber of workshops = " << cs.workshops
             << "\nNumber of working workshops = " << cs.workingWorkshops
             << "\nEfficiency indicator = " << cs.efficiency << endl;
     }
-    else
-        cout << "Error! Please, add options for pipe or CS" << endl;
-    
+    if ((p.length == 0) && (cs.workshops == 0))
+    {
+        cout << "There are no objects" << endl;
+    }
 }
 
 void editPipe(Pipe& p)
@@ -152,13 +156,24 @@ void saveToFile(Pipe& p, CS& cs)
     file.open("savedData.txt");
     if (file.is_open())
     {
-        file << p.length << endl
-             << p.diametr << endl
-             << p.repair << endl
-             << cs.name << endl
-             << cs.workshops << endl
-             << cs.workingWorkshops << endl
-             << cs.efficiency << endl;
+        if (p.length != 0)
+        {
+            file << "1" << endl
+                << p.length << endl
+                << p.diametr << endl
+                << p.repair << endl;
+        }
+        else file << "0" << endl;
+
+        if (cs.workshops != 0)
+        {
+            file << "1" << endl
+                << cs.name << endl
+                << cs.workshops << endl
+                << cs.workingWorkshops << endl
+                << cs.efficiency << endl;
+        }
+        else file << "0" << endl;
         file.close();
     }
 }
@@ -167,21 +182,30 @@ void downloadFromFile(Pipe& p, CS& cs)
 {
     ifstream file2;
     string line;
+    int data;
     file2.open("savedData.txt");
     if (file2.is_open())
     {
-        file2 >> p.length;
-        file2 >> p.diametr;
-        file2 >> p.repair;
-        getline(file2 >> ws, line);
-        cs.name = line;
-        file2 >> cs.workshops;
-        file2 >> cs.workingWorkshops;
-        file2 >> cs.efficiency;
-    }
-    else
-    {
-        cout << "There is no file" << endl;
+        file2 >> data;
+        if (data == 1)
+        {
+            file2 >> p.length;
+            file2 >> p.diametr;
+            file2 >> p.repair;
+        }
+        file2 >> data;
+        if (data == 1)
+        {
+            getline(file2 >> ws, line);
+            cs.name = line;
+            file2 >> cs.workshops;
+            file2 >> cs.workingWorkshops;
+            file2 >> cs.efficiency;
+        }
+        else
+        {
+            cout << "There is no file" << endl;
+        }
     }
 }
 
@@ -195,7 +219,7 @@ int main()
     {
         cout << "\nMenu \n1. Add pipe \n2. Add CS \n3. View all objects \n4. Edit pipe \n5. Edit CS \n6. Save \n7. Download \n0. Exit \n\n";
         cin >> action;
-        varificationOfEnteredData(action);
+        verificationOfEnteredData(action);
         switch (action)
         {
         case 1:
