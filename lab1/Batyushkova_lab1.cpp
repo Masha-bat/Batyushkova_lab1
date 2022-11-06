@@ -1,229 +1,138 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <Batyushkova_lab1.h>
 using namespace std;
 
-struct Pipe
-{
-    double length = 0, diametr = 0, repair = -1;
-};
+int Pipe::max_id = 0;
+int CS::max_idd = 0;
 
-struct CS
-{
-    string name = "";
-    int efficiency = 0, workshops = 0, workingWorkshops = -1;
-};
-
-double verificationOfEnteredData(double x)
-{
-    while (x <= 0)
-    {
+template <typename T>
+T correctNumber(T min, T max) {
+    int x;
+    do {
         cin.clear();
         cin.ignore(INT_MAX, '\n');
-        cout << "Error! Please, enter value > 0" << endl;
+        cout << "Type number (" << min << "-" << max << "):";
         cin >> x;
-    }
+    } while (cin.fail() || x<min || x>max );
     return x;
 }
 
-int integerCheck(double x)
+string pipeStatus(bool x)
 {
-    while ((x <= 0) || (x / trunc(x) != 1))
-    {
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-        cout << "Error! Please, enter integer value > 0" << endl;
-        cin >> x;
-    }
-    return x;
-}
-
-int correctWorkingWorkshops(int x, double y)
-{
-    while ((x < y) || (y <= 0) || (y / trunc(y) != 1))
-    {
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-        cout << "Error! Please, enter integer value > 0 and no more then the number of workshops" << endl;
-        cin >> y;
-    }
-    return y;
-}
-
-int correctAttribute(double x)
-{
-    while ((x < 1) || (x > 2) || (x / trunc(x) != 1))
-    { 
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-        cout << "Error! Please, enter right attribute (1 - pipe is under repair, 2 - pipe is working) " << endl;
-        cin >> x;
-    }
-    return x;
-}
-
-string pipeStatus(int x)
-{
-    if (x == 1)
-        return ("Pipe is under repair");
-    else if (x == 2)
+    if (x == true)
         return ("Pipe is working");
+    else if (x == false)
+        return ("Pipe is under repair");
     else
         return ("Unknown");
 }
 
-void addPipe(Pipe& p)
+istream& operator>> (istream& in, Pipe& p)
 {
-    cout << "Enter pipe length: ";
-    cin >> p.length;
-    p.length = verificationOfEnteredData(p.length);
-    cout << "Enter pipe diametr: ";
-    cin >> p.diametr;
-    p.diametr = verificationOfEnteredData(p.diametr);
-    cout << "Select attribute: \n1. pipe is under repair \n2. pipe is working \n";
-    cin >> p.repair;
-    p.repair = correctAttribute(p.repair);
-    cout << pipeStatus(p.repair) << endl;
+    cout << "\n Index of pipe: " << p.idp;
+    cout << "\nInput name ";
+    in.clear();
+    in.ignore(INT_MAX, '\n');
+    getline(in, p.name);
+    cout << "\nInput lenght ";
+    p.lenght = correctNumber(0.0, DBL_MAX);
+    cout << "\nInput diameter ";
+    p.diameter = correctNumber(0.0, DBL_MAX);
+    cout << "\nChoose status of pipe (0 if repairing, 1 if works) ";
+    p.status = correctNumber(1, 2);
+    cout << pipeStatus(p.status) << endl;
+    return in;
 }
 
-void addCS(CS& cs)
+istream& operator>> (istream& in, CS& cs)
 {
-    cout << "Give the name of the compressor station: ";
-    getline(cin >> ws, cs.name);
-    cout << "Number of workshops: ";
-    cin >> cs.workshops;
-    cs.workshops = integerCheck(cs.workshops);
-    cout << "Number of working workshops: ";
-    cin >> cs.workingWorkshops;
-    cout << "Efficiency indicator = ";
-    cin >> cs.efficiency;
-    cs.efficiency = verificationOfEnteredData(cs.efficiency);
+    cout << "\nIndex of cs: " << cs.idcs;
+    cout << "\nInput name ";
+    in.clear();
+    in.ignore(INT_MAX, '\n');
+    getline(in, cs.name);
+    cout << "\nNumber of workshops ";
+    cs.workshop = correctNumber(0, INT_MAX);
+    cout << "\nNumber of working workshops ";
+    cs.workingWorkshop = correctNumber(0, cs.workshop);
+    cout << "\nEnter the effectiveness ";
+    cs.efficiency = correctNumber(0, 100);
+    return in;
 }
 
-void viewObjects(Pipe p, CS cs)
+ostream& operator<< (ostream& out, Pipe& p) 
 {
-    if (p.length != 0)
-    {
-        cout << "\nPipe: "
-            << "\nLength = " << p.length
-            << "\nDiametr = " << p.diametr
-            << "\nSelected attribute: " << pipeStatus(p.repair) << endl;
-    }
-    if (cs.workshops != 0)
-    {
-        cout << "\nCS: \nName: " << cs.name
-            << "\nNumber of workshops = " << cs.workshops
-            << "\nNumber of working workshops = " << cs.workingWorkshops
-            << "\nEfficiency indicator = " << cs.efficiency << endl;
-    }
-    if ((p.length == 0) && (cs.workshops == 0))
-    {
-        cout << "There are no objects" << endl;
-    }
+    out << "\nIndex of pipe: " << p.idp << "\nPipe info: " << "\nName: " << p.name << "\nLenght: " << p.lenght << "\nDiameter : " << p.diameter
+        << "\nStatus: " << pipeStatus(p.status) << endl;
+    return out;
 }
 
-void editPipe(Pipe& p)
+ostream& operator<< (ostream& out, CS& cs) 
 {
-    if (p.repair == -1)
-        cout << "There is no pipe" << endl;
-    else
-    {
-        cout << "Change pipe state: \n0. pipe is under repair \n1. pipe is working" << endl;
-        cin >> p.repair;
-        p.repair = correctAttribute(p.repair);
-        cout << pipeStatus(p.repair) << endl;
-    }
+    out << "\nIndex of CS: " << cs.idcs << "\nCS info:\nName: " << cs.name << "\nNumber of workshops: " << cs.workshop
+        << "\nNumber of working workshops: " << cs.workingWorkshop << "\nEffectiveness: "
+        << cs.efficiency << "%" << endl;
+    return out;
 }
 
-void editCS(CS& cs)
-{
-    if (cs.workingWorkshops == -1)
-        cout << "There is no working compressor stations" << endl;
-    else
-    {
-        cout << "Number of workshops: " << cs.workshops << endl;
-        cout << "Change number of working shops: ";
-        cin >> cs.workingWorkshops;
-        cs.workingWorkshops = correctWorkingWorkshops(cs.workshops, cs.workingWorkshops);
-    }
-
-
+void Pipe::edit_Pipe() {
+    cout << "Status: " << pipeStatus(status) << endl;
+    cout << "Change pipe state: \n1. pipe is working \n2. pipe is under repair" << endl;
+    status = correctNumber(1, 2);
+    cout << pipeStatus(status);
 }
 
-void saveToFile(Pipe& p, CS& cs)
-{
-    ofstream file;
-    file.open("savedData.txt");
-    if (file.is_open())
-    {
-        if (p.length != 0)
-        {
-            file << "1" << endl
-                << p.length << endl
-                << p.diametr << endl
-                << p.repair << endl;
-        }
-        else file << "0" << endl;
-
-        if (cs.workshops != 0)
-        {
-            file << "1" << endl
-                << cs.name << endl
-                << cs.workshops << endl
-                << cs.workingWorkshops << endl
-                << cs.efficiency << endl;
-        }
-        else file << "0" << endl;
-        file.close();
-    }
+void CS::edit_cs() {
+    cout << "Number of workshops: " << workshop << endl;
+    cout << "Change number of working shops: ";
+    workingWorkshop = correctNumber(0, workshop);
 }
 
-void downloadFromFile(Pipe& p, CS& cs)
+void Pipe::save_pipe(ofstream& file) 
 {
-    ifstream file2;
-    string line;
-    int data;
-    file2.open("savedData.txt");
-    if (file2.is_open())
-    {
-        file2 >> data;
-        if (data == 1)
-        {
-            file2 >> p.length;
-            file2 >> p.diametr;
-            file2 >> p.repair;
-        }
-        file2 >> data;
-        if (data == 1)
-        {
-            getline(file2 >> ws, line);
-            cs.name = line;
-            file2 >> cs.workshops;
-            file2 >> cs.workingWorkshops;
-            file2 >> cs.efficiency;
-        }
-        else
-        {
-            cout << "There is no file" << endl;
-        }
-    }
+    file << idp << endl << name << endl << lenght << endl << diameter << endl << status << endl;
+}
+
+void CS::save_cs(ofstream& file) 
+{
+    file << idcs << endl << name << endl << workshop << endl << workingWorkshop << endl << efficiency << endl;
+}
+
+void Pipe::load_pipe(ifstream& file) 
+{
+    file >> idp;
+    getline(file, name);
+    getline(file, name);
+    file >> lenght;
+    file >> diameter;
+    file >> status;
+}
+
+void CS::load_cs(ifstream& file) 
+{
+    file >> idcs;
+    getline(file, name);
+    getline(file, name);
+    file >> workshop;
+    file >> workingWorkshop;
+    file >> efficiency;
 }
 
 int main()
 {
     int action = -1;
-    Pipe p;
-    CS cs;
-
     while (action)
     {
         cout << "\nMenu \n1. Add pipe \n2. Add CS \n3. View all objects \n4. Edit pipe \n5. Edit CS \n6. Save \n7. Download \n0. Exit \n\n";
-        cin >> action;
-        verificationOfEnteredData(action);
+        action = correctNumber(0, 9);
         switch (action)
         {
         case 1:
         {
+            Pipe p;
+            cin >> p;
             addPipe(p);
             break;
         }
