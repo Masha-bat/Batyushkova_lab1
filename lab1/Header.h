@@ -8,17 +8,20 @@
 #include "Pipe.h"
 #include <unordered_map>
 #include <unordered_set>
+
 using namespace std;
+
 template <typename T>
 T correctNumber(T min, T max) {
 	int x;
 	while ((cin >> x).fail() || (x<min) || (x>max)) {
 		cin.clear();
-		cin.ignore(10000, '\n');
+		cin.ignore(INT_MAX, '\n');
 		cout << "Type number (" << min << "-" << max << "):";
 	} 
 	return x;
 }
+
 template <typename T>
 using filter_p = bool (*) (Pipe& p, T par);
 
