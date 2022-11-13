@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -26,5 +27,3 @@ private:
     int idp = 0;
 
 };
-
-int Pipe::max_idp = 0;
