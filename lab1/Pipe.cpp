@@ -7,7 +7,9 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "Header.h"
+
 int Pipe::max_idp = 0;
+
 string pipeStatus(bool x)
 {
     if (x == true)
@@ -17,19 +19,20 @@ string pipeStatus(bool x)
     else
         return ("Unknown");
 }
+
 istream& operator>> (istream& in, Pipe& p)
 {
-    cout << "\n Index of pipe: " << p.idp;
-    cout << "\nInput name ";
+    cout << "\nIndex of pipe: " << p.idp;
+    cout << "\nInput pipe name: ";
     cin.clear();
     cin.ignore(INT_MAX, '\n');
     getline(cin, p.name);
-    cout << "\nInput lenght ";
+    cout << "Input lenght: ";
     p.lenght = correctNumber(0.0, DBL_MAX);
-    cout << "\nInput diameter ";
+    cout << "Input diameter: ";
     p.diameter = correctNumber(0.0, DBL_MAX);
-    cout << "\nChoose status of pipe (0 if repairing, 1 if works) ";
-    p.status = correctNumber(1, 2);
+    cout << "Select attribute: \n0. pipe is under repair \n1. pipe is working \n";
+    p.status = correctNumber(0, 1);
     cout << pipeStatus(p.status) << endl;
     return in;
 }

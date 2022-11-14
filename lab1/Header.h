@@ -41,7 +41,7 @@ vector <int> parametrP(unordered_map <int, Pipe>& pipe_group, filter_p<T> f, T p
 }
 
 template <typename T>
-vector <int> search_cs_by_parametr(unordered_map <int, CS>& cs_group, filter_cs<T> f, T par)
+vector <int> parametrCs(unordered_map <int, CS>& cs_group, filter_cs<T> f, T par)
 {
     vector <int> id;
     for (auto& cs : cs_group)

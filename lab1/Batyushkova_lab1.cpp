@@ -16,25 +16,28 @@ unordered_map<int, CS> cs_group;
 unordered_set<int> iddpipe;
 unordered_set <int> iddcs;
 
-
-
-bool checkNameP(Pipe& p, string name) {
+bool checkNameP(Pipe& p, string name) 
+{
 	return (p.name.find(name) != string::npos);
 }
 
-bool checkStatusP(Pipe& p, bool status) {
+bool checkStatusP(Pipe& p, bool status) 
+{
 	return (p.status == status);
 }
 
-bool checkNameCS(CS& cs, string name) {
+bool checkNameCS(CS& cs, string name) 
+{
 	return (cs.name.find(name) != string::npos);
 }
 
-bool checkUnworking(CS& cs, double p) {
+bool checkUnworking(CS& cs, double p) 
+{
 	return (cs.get_unused() >= p);
 }
 
-ostream& operator<< (ostream& out, unordered_set <int>& par) {
+ostream& operator<< (ostream& out, unordered_set <int>& par) 
+{
 	out << "Exiting id: ";
 	for (auto& i : par) {
 		out << i << " ";
@@ -43,9 +46,8 @@ ostream& operator<< (ostream& out, unordered_set <int>& par) {
 	return out;
 }
 
-
-
-void viewObjects(unordered_map<int, Pipe>& pipe_group, unordered_map<int, CS>& cs_group) {
+void viewObjects(unordered_map<int, Pipe>& pipe_group, unordered_map<int, CS>& cs_group) 
+{
 	for (auto& pipe : pipe_group) {
 		cout << pipe.second << endl;
 	}
@@ -54,8 +56,8 @@ void viewObjects(unordered_map<int, Pipe>& pipe_group, unordered_map<int, CS>& c
 	}
 }
 
-
-void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id) {
+void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id) 
+{
 	int x;
 	cout << "Search pipe by 1.name 2.status" << endl;
 	x = correctNumber(1, 2);
@@ -74,7 +76,9 @@ void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id) {
 		id = parametrP(pipe_group, checkStatusP, k);
 	}
 }
-void searchCs(unordered_map <int, CS>& cs_group, vector<int>& id) {
+
+void searchCs(unordered_map <int, CS>& cs_group, vector<int>& id) 
+{
 	int x;
 	cout << "Search CS by 1.name 2.percentage of unused shops" << endl;
 	x = correctNumber(1, 2);
@@ -84,33 +88,36 @@ void searchCs(unordered_map <int, CS>& cs_group, vector<int>& id) {
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 		getline(cin, name);
-		id = search_cs_by_parametr(cs_group, checkNameCS, name);
+		id = parametrCs(cs_group, checkNameCS, name);
 
 	}
 	else {
 		double k;
 		cout << "Enter the percentage of unused shops" << endl;
 		k = correctNumber(0, 100);
-		id = search_cs_by_parametr(cs_group, checkUnworking, k);
+		id = parametrCs(cs_group, checkUnworking, k);
 	}
 
 }
 
-void addPipe() {
+void addPipe() 
+{
 	iddpipe.insert(Pipe::max_idp);
 	Pipe p;
 	cin >> p;
 	pipe_group.insert({ p.getIdP(),p });
 }
 
-void addCs() {
+void addCs() 
+{
 	iddcs.insert(CS::max_idcs);
 	CS cs;
 	cin >> cs;
 	cs_group.insert({ cs.getIdCs(),cs });
 }
 
-void editPipes() {
+void editPipes() 
+{
 	int edit;
 	int id1;
 	int x;
@@ -178,7 +185,8 @@ void editPipes() {
 
 }
 
-void editCs() {
+void editCs() 
+{
 	vector <int> idcs;
 	if (cs_group.size() != 0) {
 		cout << "1.Edit one CS 2.Edit CSs 3.Delete CS" << endl;
@@ -260,7 +268,8 @@ void editCs() {
 
 }
 
-void saveToFile() {
+void saveToFile() 
+{
 	string x;
 	cout << "Enter the name of your file: " << endl;
 	cin >> x;
@@ -278,7 +287,8 @@ void saveToFile() {
 
 }
 
-void downloadFromFile() {
+void downloadFromFile() 
+{
 	string x;
 	int p1, cs2;
 	Pipe newpipe;
@@ -311,7 +321,8 @@ void downloadFromFile() {
 
 }
 
-void searchPipes() {
+void searchPipes() 
+{
 	vector <int> x;
 	if (pipe_group.size() != 0) {
 		searchP(pipe_group, x);
@@ -326,7 +337,8 @@ void searchPipes() {
 		cout << "There is no pipe to find" << endl;
 }
 
-void searchCS() {
+void searchCS() 
+{
 	vector <int> x;
 	if (cs_group.size() != 0) {
 		searchCs(cs_group, x);
@@ -385,13 +397,23 @@ int main()
 			downloadFromFile();
 			break;
 		}
+		case 8: 
+		{
+			searchPipes();
+			break;
+		}
+		case 9: 
+		{
+			searchCS();
+			break;
+		}
 		case 0:
 		{
 			return 0;
 		}
 		default:
 		{
-			cout << "Wrong action. Please, enter action from menu (0-7)" << endl;
+			cout << "Wrong action. Please, enter action from menu (0-9)" << endl;
 		}
 		}
 	}
