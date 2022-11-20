@@ -14,7 +14,7 @@ public:
     {
         idcs = max_idcs++;
     }
-    friend istream& operator>> (istream& in, CS& p);
+    friend istream& operator>> (istream& in, CS& cs);
     friend ostream& operator<< (ostream& out, CS& cs);
     void editCs();
     void saveCs(ofstream& file);

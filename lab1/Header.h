@@ -23,6 +23,17 @@ T correctNumber(T min, T max) {
 }
 
 template <typename T>
+ostream& operator<< (ostream& out, unordered_set <int,T>& par)
+{
+    out << "Exiting id: ";
+    for (auto& i : par) {
+        out << i << " ";
+    }
+    out << endl;
+    return out;
+}
+
+template <typename T>
 using filter_p = bool (*) (Pipe& p, T par);
 
 template <typename T>

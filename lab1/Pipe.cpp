@@ -10,14 +10,17 @@
 
 int Pipe::max_idp = 0;
 
-string pipeStatus(bool x)
+//string Pipe :: pipeStatus()
+//{
+//    if (x == true)
+//        return ("Pipe is working");
+//    else if (x == false)
+//        return ("Pipe is under repair");
+//}
+
+string Pipe :: pipeStatus()
 {
-    if (x == true)
-        return ("Pipe is working");
-    else if (x == false)
-        return ("Pipe is under repair");
-    else
-        return ("Unknown");
+    return status ? "Pipe is working" : "Pipe is under repair";
 }
 
 istream& operator>> (istream& in, Pipe& p)
@@ -33,22 +36,22 @@ istream& operator>> (istream& in, Pipe& p)
     p.diameter = correctNumber(0.0, DBL_MAX);
     cout << "Select attribute: \n0. pipe is under repair \n1. pipe is working \n";
     p.status = correctNumber(0, 1);
-    cout << pipeStatus(p.status) << endl;
+    cout << p.pipeStatus() << endl;
     return in;
 }
 
 ostream& operator<< (ostream& out, Pipe& p)
 {
     out << "\nIndex of pipe: " << p.idp << "\nPipe info: " << "\nName: " << p.name << "\nLenght: " << p.lenght << "\nDiameter : " << p.diameter
-        << "\nStatus: " << pipeStatus(p.status) << endl;
+        << "\nStatus: " << p.pipeStatus() << endl;
     return out;
 }
 
 void Pipe::editPipe() {
-    cout << "Status: " << pipeStatus(status) << endl;
-    cout << "Change pipe state: \n1. pipe is working \n2. pipe is under repair" << endl;
+    cout << "Status: " << pipeStatus() << endl;
+    cout << "Select attribute: \n0. pipe is under repair \n1. pipe is working \n" << endl;
     status = correctNumber(1, 2);
-    cout << pipeStatus(status);
+    cout << pipeStatus();
 }
 
 void Pipe::savePipe(ofstream& file)

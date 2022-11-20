@@ -15,16 +15,16 @@ int CS::max_idcs = 0;
 istream& operator>> (istream& in, CS& cs)
 {
     cout << "\nIndex of cs: " << cs.idcs;
-    cout << "\nInput name ";
+    cout << "\nInput name: ";
     cin.clear();
     cin.ignore(INT_MAX, '\n');
     getline(in, cs.name);
-    cout << "\nNumber of workshops ";
+    cout << "Number of workshops: ";
     cs.workshop = correctNumber(0, INT_MAX);
-    cout << "\nNumber of working workshops ";
+    cout << "Number of working workshops: ";
     cs.workingWorkshop = correctNumber(0, cs.workshop);
-    cout << "\nEnter the effectiveness ";
-    cs.efficiency = correctNumber(0, 100);
+    int efficiency = (cs.workingWorkshop / cs.workshop) * 100 ;
+    cout << "Efficiency = " << efficiency << "%";
     return in;
 }
 
@@ -38,6 +38,7 @@ ostream& operator<< (ostream& out, CS& cs)
 
 void CS::editCs() {
     cout << "Number of workshops: " << workshop << endl;
+    cout << "Number of working workshops: " << workingWorkshop << endl;
     cout << "Change number of working shops: ";
     workingWorkshop = correctNumber(0, workshop);
 }

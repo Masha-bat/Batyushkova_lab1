@@ -17,10 +17,11 @@ public:
     }
     friend istream& operator >> (istream& in, Pipe& p);
     friend ostream& operator << (ostream& out, Pipe& p);
+    string pipeStatus();
     void editPipe();
     void savePipe(ofstream& file);
     void loadPipe(ifstream& file);
-    int getIdP() { return idp; }
+    int getIdP() { return idp; };
 
 private:
     double lenght = 0, diameter = 0;
