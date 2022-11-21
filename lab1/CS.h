@@ -20,7 +20,7 @@ public:
     void saveCs(ofstream& file);
     void loadCs(ifstream& file);
     int getIdCs() { return idcs; }
-    double get_unused() { return (((double)workshop - (double)workingWorkshop) / (double)workshop) * 100; }
+    double getUsed() { return (((double)workshop - (double)workingWorkshop ) / (double)workshop) * 100; }
     string name = "";
 
 private:

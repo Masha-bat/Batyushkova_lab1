@@ -20,7 +20,7 @@ int Pipe::max_idp = 0;
 
 string Pipe :: pipeStatus()
 {
-    return status ? "Pipe is working" : "Pipe is under repair";
+    return status ? "Pipe is working\n" : "Pipe is under repair\n";
 }
 
 istream& operator>> (istream& in, Pipe& p)
@@ -50,7 +50,7 @@ ostream& operator<< (ostream& out, Pipe& p)
 void Pipe::editPipe() {
     cout << "Status: " << pipeStatus() << endl;
     cout << "Select attribute: \n0. pipe is under repair \n1. pipe is working \n" << endl;
-    status = correctNumber(1, 2);
+    status = correctNumber(0, 1);
     cout << pipeStatus();
 }
 

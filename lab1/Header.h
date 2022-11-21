@@ -23,10 +23,11 @@ T correctNumber(T min, T max) {
 }
 
 template <typename T>
-ostream& operator<< (ostream& out, unordered_set <int,T>& par)
+ostream& operator<< (ostream& out, unordered_map <int,T>& par)
 {
-    out << "Exiting id: ";
-    for (auto& i : par) {
+    out << "Existing id: ";
+    for (auto& [i, obj] : par) 
+    {
         out << i << " ";
     }
     out << endl;

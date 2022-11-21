@@ -23,8 +23,8 @@ istream& operator>> (istream& in, CS& cs)
     cs.workshop = correctNumber(0, INT_MAX);
     cout << "Number of working workshops: ";
     cs.workingWorkshop = correctNumber(0, cs.workshop);
-    int efficiency = (cs.workingWorkshop / cs.workshop) * 100 ;
-    cout << "Efficiency = " << efficiency << "%";
+    cs.efficiency = (float(cs.workingWorkshop) / float(cs.workshop) * 100);
+    cout << "Efficiency = " << cs.efficiency << "%" << endl;
     return in;
 }
 
@@ -36,7 +36,8 @@ ostream& operator<< (ostream& out, CS& cs)
     return out;
 }
 
-void CS::editCs() {
+void CS::editCs() 
+{
     cout << "Number of workshops: " << workshop << endl;
     cout << "Number of working workshops: " << workingWorkshop << endl;
     cout << "Change number of working shops: ";

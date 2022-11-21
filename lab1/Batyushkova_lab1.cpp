@@ -31,9 +31,9 @@ bool checkNameCS(CS& cs, string name)
 	return (cs.name.find(name) != string::npos);
 }
 
-bool checkUnworking(CS& cs, double p) 
+bool checkWorking(CS& cs, double p) 
 {
-	return (cs.get_unused() >= p);
+	return (cs.getUsed() >= p);
 }
 
 
@@ -52,9 +52,10 @@ void viewObjects(unordered_map<int, Pipe>& pipe_group, unordered_map<int, CS>& c
 void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id) 
 {
 	int x;
-	cout << "Search pipe by 1.name 2.status" << endl;
+	cout << "Search pipe by \n1. Name \n2. Status" << endl;
 	x = correctNumber(1, 2);
-	if (x == 1) {
+	if (x == 1) 
+	{
 		string name;
 		cout << "Enter the name of pipe: " << endl;
 		cin.clear();
@@ -62,7 +63,8 @@ void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id)
 		getline(cin, name);
 		id = parametrP(pipe_group, checkNameP, name);
 	}
-	else {
+	else 
+	{
 		bool k;
 		cout << "Select attribute: \n0. pipe is under repair \n1. pipe is working \n" << endl;
 		k = correctNumber(0, 1);
@@ -73,7 +75,7 @@ void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id)
 void searchCs(unordered_map <int, CS>& cs_group, vector<int>& id) 
 {
 	int x;
-	cout << "Search CS by 1.name 2.percentage of unused shops" << endl;
+	cout << "Search CS by \n1. Name \n2. Efficiency" << endl;
 	x = correctNumber(1, 2);
 	if (x == 1) {
 		string name;
@@ -86,9 +88,9 @@ void searchCs(unordered_map <int, CS>& cs_group, vector<int>& id)
 	}
 	else {
 		double k;
-		cout << "Enter the percentage of unused shops" << endl;
+		cout << "Enter the percentage of efficiency:" << endl;
 		k = correctNumber(0, 100);
-		id = parametrCs(cs_group, checkUnworking, k);
+		id = parametrCs(cs_group, checkWorking, k);
 	}
 
 }
@@ -114,47 +116,44 @@ void editPipes()
 	int x;
 	if (pipe_group.size() != 0) 
 	{
-		cout << "1.Choose one pipe 2.Choose pipes 3.Delete pipe" << endl;;
+		cout << "1.Choose one pipe \n2.Choose pipes \n3.Delete pipe\n" << endl;;
 		edit = correctNumber(1, 3);
 
 		if (edit == 1) 
 		{
-			cout << "1.Choose pipe to edit" << endl;
-			cout << iddpipe;
-			id1 = correctNumber(0, (int)pipe_group.size());
+			cout << "Choose pipe to edit" << endl;
+			id1 = correctNumber(0, (int)pipe_group.size() - 1);
 			pipe_group[id1].editPipe();
 		}
 
 		if (edit == 2) 
 		{
 			vector <int> idp;
-			cout << "Choose pipes by 1.filter 2.id" << endl;
+			cout << "Choose pipes by \n1. Filter \n2. Id" << endl;
 			x = correctNumber(1, 2);
+
 			if (x == 1) 
 			{
 				searchP(pipe_group, idp);
 				if (idp.size() != 0) 
 				{
-					cout << "Enter new status (0 if repairing, 1 if works)" << endl;
+					cout << "Select attribute : \n0.pipe is under repair \n1.pipe is working" << endl;
 					bool s;
 					s = correctNumber(0, 1);
 					for (auto& i : idp)
 						pipe_group[i].status = s;
 				}
 				else
-					cout << "There is no pipe to edit";
+					cout << "There is no pipe to edit\n";
 
 			}
-
-
 			if (x == 2) 
 			{
 				unordered_set <int> ids;
-				cout << iddpipe;
-				cout << "Enter the number of identifiers of pipe you want to edit" << endl;
+				cout << "Enter the number of id of pipe you want to edit" << endl;
 				int n;
 				n = correctNumber(0, Pipe::max_idp);
-				cout << "Enter idetifiers of pipes" << endl;
+				cout << "Enter id of pipes: " << endl;
 				int y;
 				for (int i = 0; i < n; i++) 
 				{
@@ -162,21 +161,59 @@ void editPipes()
 					if (pipe_group.find(y) != pipe_group.end())
 						ids.insert(y);
 				}
-
-				cout << "Enter new status (0 if repairing, 1 if works)" << endl;
+				cout << "Select attribute : \n0.pipe is under repair \n1.pipe is working \n" << endl;
 				bool s;
 				s = correctNumber(0, 1);
 				for (auto& i : ids)
 					pipe_group[i].status = s;
 			}
 		}
-		if (edit == 3) {
-			cout << "Enter the id of pipe you want to delete" << endl;
-			int n;
-			n = correctNumber(0, Pipe::max_idp);
-			pipe_group.erase(pipe_group.find(n));
-			iddpipe.erase(iddpipe.find(n));
-			cout << "Pipe was deleted";
+		if (edit == 3)
+		{
+			vector <int> idpp;
+			cout << "1. delete one pipe 2. delete some pipes" << endl;
+			int d;
+			d = correctNumber(1, 2);
+			if (d == 1) 
+			{
+				cout << "Enter id of pipe you want to delete: " << endl;
+				int n;
+				n = correctNumber(0, Pipe::max_idp - 1);
+				pipe_group.erase(pipe_group.find(n));
+			}
+			else
+			{
+				unordered_set <int> id;
+				cout << "1.delete by filter 2.delete by id" << endl;
+				int n;
+				n = correctNumber(1, 2);
+				if (n == 2) 
+				{
+					cout << "Enter the number of pipes you want to delete: ";
+					int y = correctNumber(1, Pipe::max_idp);
+					cout << "Enter id of pipes: " << endl;
+					while (id.size() < n)
+					{
+						int x = correctNumber(0, Pipe::max_idp - 1);
+						if (pipe_group.find(x) != pipe_group.end())
+							id.insert(x);
+						else
+							cout << "There is no such pipe" << endl;
+					}
+					for (auto& i : id)
+						pipe_group.erase(pipe_group.find(i));
+				}
+				else 
+				{
+					searchP(pipe_group, idpp);
+					for (auto& i : idpp)
+						pipe_group.erase(pipe_group.find(i));
+					for (auto& i : iddpipe)
+						iddpipe.erase(i);
+				}
+
+				cout << "Pipe was deleted";
+			}
 		}
 	}
 	else
@@ -195,31 +232,32 @@ void editCs()
 		if (edit == 1) 
 		{
 			int id;
-			cout << "Choose CS to edit" << endl;
-			id = correctNumber(0, (int)cs_group.size());
+			cout << "Choose CS to edit: " << endl;
+			id = correctNumber(0, (int)cs_group.size() - 1);
 			cs_group[id].editCs();
 		}
 
 		if (edit == 2) 
 		{
-			unordered_set <int> idw;
-			cout << "Choose by 1.filter 2.id" << endl;
+			unordered_set <int> id;
+			cout << "Choose by \n1. Filter \n2. Id" << endl;
 			int n;
 			n = correctNumber(1, 2);
 			if (n == 2) 
 			{
-				cout << "Enter the number of cs you want to edit";
+				cout << "Enter the number of cs you want to edit: ";
+				int n;
+				n = correctNumber(1, CS::max_idcs);
+				cout << "Enter id of CSs: " << endl;
 				int y;
-				y = correctNumber(0, CS::max_idcs);
-				cout << "Enter idetifiers of CSs" << endl;
-				for (int i = 0; i < y; i++) 
+				for (int i = 0; i < n; i++) 
 				{
-					if (cs_group.find(i) != cs_group.end())
-						idw.insert(i);
+					y = correctNumber(0, INT_MAX);
+					if (cs_group.find(y) != cs_group.end())
+						id.insert(y);
 				}
-				for (auto& i : idw)
+				for (auto& i : id)
 					cs_group[i].editCs();
-
 			}
 			else 
 			{
@@ -227,43 +265,51 @@ void editCs()
 				for (auto& i : idcs)
 					cs_group[i].editCs();
 			}
-
 		}
-		if (edit == 3) {
-			cout << "1. identifier of one CS you want to delete 2.delete some CS" << endl;
+
+		if (edit == 3) 
+		{
+			vector <int> idcs;
+			cout << "1. id of one CS you want to delete 2. delete some CS" << endl;
 			int d;
 			d = correctNumber(1, 2);
-			if (d == 1) {
+			if (d == 1) 
+			{
 				cout << "Enter id of CS you want to delete" << endl;
 				int n;
-				n = correctNumber(0, CS::max_idcs);
+				n = correctNumber(0, CS::max_idcs - 1);
 				cs_group.erase(cs_group.find(n));
 			}
-			else {
-				unordered_set <int> idd;
+			else 
+			{
+				unordered_set <int> id;
 				cout << "1.delete by filter 2.delete by id" << endl;
 				int n;
 				n = correctNumber(1, 2);
-				if (n == 2) {
-					cout << "Enter the number of cs you want to edit";
-					int y;
-					y = correctNumber(0, CS::max_idcs);
-					cout << "Enter idetifiers of CSs" << endl;
-					for (int i = 0; i < y; i++) {
-						if (cs_group.find(i) != cs_group.end())
-							idd.insert(i);
+				if (n == 2) 
+				{
+					cout << "Enter the number of cs you want to edit: ";
+					int y = correctNumber(1, CS::max_idcs);
+					cout << "Enter id of CSs: " << endl;
+					while (id.size() < n)
+					{
+						int x = correctNumber(0, CS::max_idcs - 1);
+						if (cs_group.find(x) != cs_group.end())
+							id.insert(x);
+						else
+							cout << "There is no such Cs" << endl;
 					}
-					for (auto& i : idd)
+					for (auto& i : id)
 						cs_group.erase(cs_group.find(i));
 				}
-				else {
+				else 
+				{
 					searchCs(cs_group, idcs);
 					for (auto& i : idcs)
 						cs_group.erase(cs_group.find(i));
 					for (auto& i : iddcs)
 						iddcs.erase(i);
 				}
-
 				cout << "CS was deleted";
 			}
 		}
