@@ -118,7 +118,12 @@ void editPipes()
 		{
 			cout << "Choose pipe to edit" << endl;
 			int id = correctNumber(0, (int)pipe_group.size() - 1);
-			pipe_group[id].editPipe();
+			if (pipe_group.find(id) != pipe_group.end())
+			{
+				pipe_group[id].editPipe();
+			}
+			else
+				cout << "There is no pipe" << endl;
 		}
 
 		if (edit == 2) 
@@ -173,7 +178,12 @@ void editPipes()
 			{
 				cout << "Enter id of pipe you want to delete: " << endl;
 				int n;
-				n = correctNumber(0, Pipe::max_idp - 1);
+				n = correctNumber(0, Pipe::max_idp);
+				while (pipe_group.find(n) != pipe_group.end())
+				{
+					cout << "There is no such pipe" << endl;
+					n = correctNumber(0, Pipe::max_idp - 1);
+				}
 				pipe_group.erase(pipe_group.find(n));
 			}
 			else
@@ -226,7 +236,11 @@ void editCs()
 			int id;
 			cout << "Choose CS to edit: " << endl;
 			id = correctNumber(0, (int)cs_group.size() - 1);
-			cs_group[id].editCs();
+			if (cs_group.find(id) != cs_group.end())
+			{
+				cs_group[id].editCs();
+			}
+			
 		}
 
 		if (edit == 2) 
@@ -262,13 +276,18 @@ void editCs()
 		if (edit == 3) 
 		{
 			vector <int> idcs;
-			cout << "1. id of one CS you want to delete 2. delete some CS" << endl;
+			cout << "1. delete one CS 2. delete some CS" << endl;
 			int d = correctNumber(1, 2);
 			if (d == 1) 
 			{
 				cout << "Enter id of CS you want to delete" << endl;
 				int n;
-				n = correctNumber(0, CS::max_idcs - 1);
+				n = correctNumber(0, CS::max_idcs);
+				if (cs_group.find(n) != cs_group.end())
+				{
+					cout << "There is no such CS" << endl;
+					n = correctNumber(0, CS::max_idcs - 1);
+				}
 				cs_group.erase(cs_group.find(n));
 			}
 			else 
