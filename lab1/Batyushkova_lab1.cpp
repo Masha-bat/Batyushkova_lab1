@@ -11,48 +11,45 @@
 
 using namespace std;
 
-unordered_map <int, Pipe> pipe_group;
-unordered_map <int, CS> cs_group;
-
-bool checkNameP(Pipe& p, string name) 
+bool checkNameP(Pipe& p, string name)
 {
 	return (p.name.find(name) != string::npos);
 }
 
-bool checkStatusP(Pipe& p, bool status) 
+bool checkStatusP(Pipe& p, bool status)
 {
 	return (p.status == status);
 }
 
-bool checkNameCS(CS& cs, string name) 
+bool checkNameCS(CS& cs, string name)
 {
 	return (cs.name.find(name) != string::npos);
 }
 
-bool checkWorking(CS& cs, double p) 
+bool checkWorking(CS& cs, double p)
 {
 	return (cs.getUsed() >= p);
 }
 
 
-void viewObjects(unordered_map<int, Pipe>& pipe_group, unordered_map<int, CS>& cs_group) 
+void viewObjects(unordered_map<int, Pipe>& pipe_group, unordered_map<int, CS>& cs_group)
 {
-	for (auto& pipe : pipe_group) 
+	for (auto& pipe : pipe_group)
 	{
 		cout << pipe.second << endl;
 	}
-	for (auto& cs : cs_group) 
+	for (auto& cs : cs_group)
 	{
 		cout << cs.second << endl;
 	}
 }
 
-void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id) 
+void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id)
 {
 	int x;
 	cout << "Search pipe by \n1. Name \n2. Status" << endl;
 	x = correctNumber(1, 2);
-	if (x == 1) 
+	if (x == 1)
 	{
 		string name;
 		cout << "Enter the name of pipe: " << endl;
@@ -61,7 +58,7 @@ void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id)
 		getline(cin, name);
 		id = parametrP(pipe_group, checkNameP, name);
 	}
-	else 
+	else
 	{
 		bool k;
 		cout << "Select attribute: \n0. pipe is under repair \n1. pipe is working \n" << endl;
@@ -70,12 +67,13 @@ void searchP(unordered_map <int, Pipe>& pipe_group, vector<int>& id)
 	}
 }
 
-void searchCs(unordered_map <int, CS>& cs_group, vector<int>& id) 
+void searchCs(unordered_map <int, CS>& cs_group, vector<int>& id)
 {
 	int x;
-	cout << "Search CS by \n1. Name \n2. Efficiency" << endl;
+	cout << "Search CS by \n1. Name \n2. Percentage of unused shops" << endl;
 	x = correctNumber(1, 2);
-	if (x == 1) {
+	if (x == 1)
+	{
 		string name;
 		cout << "Enter the name of CS: " << endl;
 		cin.clear();
@@ -84,53 +82,68 @@ void searchCs(unordered_map <int, CS>& cs_group, vector<int>& id)
 		id = parametrCs(cs_group, checkNameCS, name);
 
 	}
-	else {
+	else
+	{
 		double k;
-		cout << "Enter the percentage of efficiency:" << endl;
+		cout << "Enter the percentage of unused workshops:" << endl;
 		k = correctNumber(0, 100);
 		id = parametrCs(cs_group, checkWorking, k);
 	}
 
 }
 
-void addPipe() 
+void addPipe(unordered_map<int, Pipe>& pipe_group)
 {
 	Pipe p;
 	cin >> p;
-	pipe_group.insert({ p.getIdP(), p});
+	pipe_group.insert({ p.getIdP(), p });
 }
 
-void addCs() 
+void addCs(unordered_map <int, CS>& cs_group)
 {
 	CS cs;
 	cin >> cs;
 	cs_group.insert({ cs.getIdCs(),cs });
 }
 
-void editPipes() 
+void editPipes(unordered_map<int, Pipe>& pipe_group)
 {
-	if (pipe_group.size() != 0) 
+	if (pipe_group.size() != 0)
 	{
 		cout << "1.Choose one pipe \n2.Choose pipes \n3.Delete pipe\n" << endl;;
 		int edit = correctNumber(1, 3);
 
-		if (edit == 1) 
+		if (edit == 1)
 		{
-			cout << "Choose pipe to edit" << endl;
-			int id = correctNumber(0, (int)pipe_group.size() - 1);
-			pipe_group[id].editPipe();
+			cout << "1. Edit pipe \n2.Delete pipe \n" << endl;
+			int choice = correctNumber(1, 2);
+			if (choice == 1)
+			{
+				cout << "Enter id of pipe: " << endl;
+				//вывод индексов
+				int id = correctNumber(0, (int)pipe_group.size() - 1);
+				pipe_group[id].editPipe();
+			}
+			else
+			{
+				cout << "Enter id of pipe you want to delete: " << endl;
+				int n;
+				n = correctNumber(0, Pipe::max_idp - 1);
+				pipe_group.erase(pipe_group.find(n));
+			}
+			
 		}
 
-		if (edit == 2) 
+		if (edit == 2)
 		{
 			vector <int> idp;
 			cout << "Choose pipes by \n1. Filter \n2. Id" << endl;
 			int x = correctNumber(1, 2);
 
-			if (x == 1) 
+			if (x == 1)
 			{
 				searchP(pipe_group, idp);
-				if (idp.size() != 0) 
+				if (idp.size() != 0)
 				{
 					cout << "Select attribute : \n0.pipe is under repair \n1.pipe is working" << endl;
 					bool s;
@@ -142,7 +155,7 @@ void editPipes()
 					cout << "There is no pipe to edit\n";
 
 			}
-			if (x == 2) 
+			if (x == 2)
 			{
 				unordered_set <int> ids;
 				cout << "Enter the number of id of pipe you want to edit" << endl;
@@ -150,7 +163,7 @@ void editPipes()
 				n = correctNumber(0, Pipe::max_idp);
 				cout << "Enter id of pipes: " << endl;
 				int y;
-				for (int i = 0; i < n; i++) 
+				for (int i = 0; i < n; i++)
 				{
 					y = correctNumber(0, Pipe::max_idp - 1);
 					if (pipe_group.find(y) != pipe_group.end())
@@ -169,7 +182,7 @@ void editPipes()
 			cout << "1. delete one pipe 2. delete some pipes" << endl;
 			int d;
 			d = correctNumber(1, 2);
-			if (d == 1) 
+			if (d == 1)
 			{
 				cout << "Enter id of pipe you want to delete: " << endl;
 				int n;
@@ -182,7 +195,7 @@ void editPipes()
 				cout << "1.delete by filter 2.delete by id" << endl;
 				int n;
 				n = correctNumber(1, 2);
-				if (n == 2) 
+				if (n == 2)
 				{
 					cout << "Enter the number of pipes you want to delete: ";
 					int y = correctNumber(1, Pipe::max_idp);
@@ -198,7 +211,7 @@ void editPipes()
 					for (auto& i : id)
 						pipe_group.erase(pipe_group.find(i));
 				}
-				else 
+				else
 				{
 					searchP(pipe_group, idpp);
 					for (auto& i : idpp)
@@ -214,14 +227,14 @@ void editPipes()
 
 }
 
-void editCs() 
+void editCs(unordered_map <int, CS>& cs_group)
 {
 	vector <int> idcs;
-	if (cs_group.size() != 0) 
+	if (cs_group.size() != 0)
 	{
 		cout << "1.Edit one CS 2.Edit CSs 3.Delete CS" << endl;
 		int edit = correctNumber(1, 3);
-		if (edit == 1) 
+		if (edit == 1)
 		{
 			int id;
 			cout << "Choose CS to edit: " << endl;
@@ -229,20 +242,20 @@ void editCs()
 			cs_group[id].editCs();
 		}
 
-		if (edit == 2) 
+		if (edit == 2)
 		{
 			unordered_set <int> id;
 			cout << "Choose by \n1. Filter \n2. Id" << endl;
 			int n;
 			n = correctNumber(1, 2);
-			if (n == 2) 
+			if (n == 2)
 			{
 				cout << "Enter the number of cs you want to edit: ";
 				int n;
 				n = correctNumber(1, CS::max_idcs);
 				cout << "Enter id of CSs: " << endl;
 				int y;
-				for (int i = 0; i < n; i++) 
+				for (int i = 0; i < n; i++)
 				{
 					y = correctNumber(0, INT_MAX);
 					if (cs_group.find(y) != cs_group.end())
@@ -251,7 +264,7 @@ void editCs()
 				for (auto& i : id)
 					cs_group[i].editCs();
 			}
-			else 
+			else
 			{
 				searchCs(cs_group, idcs);
 				for (auto& i : idcs)
@@ -259,25 +272,25 @@ void editCs()
 			}
 		}
 
-		if (edit == 3) 
+		if (edit == 3)
 		{
 			vector <int> idcs;
 			cout << "1. id of one CS you want to delete 2. delete some CS" << endl;
 			int d = correctNumber(1, 2);
-			if (d == 1) 
+			if (d == 1)
 			{
 				cout << "Enter id of CS you want to delete" << endl;
 				int n;
 				n = correctNumber(0, CS::max_idcs - 1);
 				cs_group.erase(cs_group.find(n));
 			}
-			else 
+			else
 			{
 				unordered_set <int> id;
 				cout << "1.delete by filter 2.delete by id" << endl;
 				int n;
 				n = correctNumber(1, 2);
-				if (n == 2) 
+				if (n == 2)
 				{
 					cout << "Enter the number of cs you want to edit: ";
 					int y = correctNumber(1, CS::max_idcs);
@@ -293,7 +306,7 @@ void editCs()
 					for (auto& i : id)
 						cs_group.erase(cs_group.find(i));
 				}
-				else 
+				else
 				{
 					searchCs(cs_group, idcs);
 					for (auto& i : idcs)
@@ -308,7 +321,7 @@ void editCs()
 
 }
 
-void saveToFile() 
+void saveToFile(unordered_map<int, Pipe>& pipe_group, unordered_map <int, CS>& cs_group)
 {
 	string x;
 	cout << "Enter the name of your file: " << endl;
@@ -317,7 +330,7 @@ void saveToFile()
 	file.open(x + ".txt");
 	if (!file)
 		cout << "file is not found" << endl;
-	else 
+	else
 	{
 		file << pipe_group.size() << " " << cs_group.size() << endl;
 		for (auto pipe : pipe_group)
@@ -328,7 +341,7 @@ void saveToFile()
 
 }
 
-void downloadFromFile() 
+void downloadFromFile(unordered_map<int, Pipe>& pipe_group, unordered_map <int, CS>& cs_group)
 {
 	string x;
 	int p1, cs2;
@@ -340,21 +353,21 @@ void downloadFromFile()
 	file2.open(x + ".txt");
 	if (!file2)
 		cout << "file is not found";
-	else 
+	else
 	{
 		Pipe::max_idp = 0;
 		CS::max_idcs = 0;
 		pipe_group.clear();
 		cs_group.clear();
 		file2 >> p1 >> cs2;
-		for (int i = 0; i < p1; i++) 
+		for (int i = 0; i < p1; i++)
 		{
 			newpipe.loadPipe(file2);
 			pipe_group.insert({ newpipe.getIdP(),newpipe });
 			if (Pipe::max_idp < newpipe.getIdP())
 				Pipe::max_idp = newpipe.getIdP();
 		}
-		for (int i = 0; i < cs2; i++) 
+		for (int i = 0; i < cs2; i++)
 		{
 			newcs.loadCs(file2);
 			cs_group.insert({ newcs.getIdCs(),newcs });
@@ -365,13 +378,13 @@ void downloadFromFile()
 
 }
 
-void searchPipes() 
+void searchPipes(unordered_map<int, Pipe>& pipe_group)
 {
 	vector <int> x;
-	if (pipe_group.size() != 0) 
+	if (pipe_group.size() != 0)
 	{
 		searchP(pipe_group, x);
-		if (x.size() != 0) 
+		if (x.size() != 0)
 		{
 			for (auto& i : x)
 				cout << pipe_group[i] << endl;
@@ -383,13 +396,13 @@ void searchPipes()
 		cout << "There is no pipe to find" << endl;
 }
 
-void searchCS() 
+void searchCS(unordered_map <int, CS>& cs_group)
 {
 	vector <int> x;
-	if (cs_group.size() != 0) 
+	if (cs_group.size() != 0)
 	{
 		searchCs(cs_group, x);
-		if (x.size() != 0) 
+		if (x.size() != 0)
 		{
 			for (auto& i : x)
 				cout << cs_group[i] << endl;
@@ -404,6 +417,8 @@ void searchCS()
 
 int main()
 {
+	unordered_map<int, Pipe> pipe_group;
+	unordered_map <int, CS> cs_group;
 	int action = -1;
 	while (action)
 	{
@@ -413,12 +428,12 @@ int main()
 		{
 		case 1:
 		{
-			addPipe();
+			addPipe(pipe_group);
 			break;
 		}
 		case 2:
 		{
-			addCs();
+			addCs(cs_group);
 			break;
 		}
 		case 3:
@@ -428,32 +443,32 @@ int main()
 		}
 		case 4:
 		{
-			editPipes();
+			editPipes(pipe_group);
 			break;
 		}
 		case 5:
 		{
-			editCs();
+			editCs(cs_group);
 			break;
 		}
 		case 6:
 		{
-			saveToFile();
+			saveToFile(pipe_group, cs_group);
 			break;
 		}
 		case 7:
 		{
-			downloadFromFile();
+			downloadFromFile(pipe_group, cs_group);
 			break;
 		}
-		case 8: 
+		case 8:
 		{
-			searchPipes();
+			searchPipes(pipe_group);
 			break;
 		}
-		case 9: 
+		case 9:
 		{
-			searchCS();
+			searchCS(cs_group);
 			break;
 		}
 		case 0:
